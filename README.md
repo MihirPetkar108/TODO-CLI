@@ -17,6 +17,8 @@ Lightweight command-line TODO manager that stores tasks in `todo.txt`.
 
 `TODO CLI` is a small, dependency light command line tool for managing a plaintext todo list (`todo.txt`).
 
+A Node.js CLI tool for managing todos with file based persistence. Built using Commander.js supporting CRUD operations on tasks via terminal commands.
+
 ## Features
 
 - File-backed tasks in `todo.txt` for portability and manual edits
