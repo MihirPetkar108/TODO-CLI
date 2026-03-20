@@ -27,8 +27,18 @@ program
 
             let todos = [];
 
+            try {
+                todos = JSON.parse(data);
+            } catch (e) {
+                todos = [];
+            }
+
+            let maxId =
+                todos.length > 0
+                    ? Math.max(...todos.map((todo) => todo.id))
+                    : 0;
             let newtodo = {
-                id: todos.length + 1,
+                id: maxId + 1,
                 task: content,
             };
 
@@ -78,8 +88,64 @@ program
             }
 
             for (let i = 0; i < content.length; i++) {
-                console.log(`Task ${i + 1}:- ${content[i].task}`);
+                console.log(
+                    `ID ${content[i].id} => Task ${i + 1}:- ${content[i].task}`,
+                );
             }
+        });
+    });
+
+program
+    .command("delete")
+    .description("Delete a todo!")
+    .argument("<number>", "Which task do you want to delete?")
+    .action((id) => {
+        fs.readFile("todo.txt", "utf-8", (err, data) => {
+            if (err) {
+                if (err.code == "ENOENT") {
+                    console.log("No data found!");
+                    return;
+                } else {
+                    console.log(`Error while deleting data:- ${err}`);
+                    return;
+                }
+            }
+
+            let content = [];
+
+            try {
+                content = JSON.parse(data);
+            } catch (e) {
+                console.log(`No data found!`);
+                return;
+            }
+
+            if (content.length === 0) {
+                console.log("No data found!");
+                return;
+            }
+
+            const originalLength = content.length;
+            content = content.filter((todo) => todo.id != id);
+            if (content.length === originalLength) {
+                console.log(`No todo found with ID ${id}`);
+                return;
+            }
+
+            fs.writeFile(
+                "todo.txt",
+                JSON.stringify(content, null, 2),
+                "utf-8",
+                (err) => {
+                    if (err) {
+                        console.log(
+                            `Error while writing to file while deleting data`,
+                        );
+                    } else {
+                        console.log(`Deleted todo!`);
+                    }
+                },
+            );
         });
     });
 
