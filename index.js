@@ -149,4 +149,65 @@ program
         });
     });
 
+program
+    .command("edit")
+    .description("Edit a todo!")
+    .argument("<number>", "Which task do you want to edit?")
+    .argument("<string>", "What do you want to change the task to?")
+    .action((id, taskContent) => {
+        fs.readFile("todo.txt", "utf-8", (err, data) => {
+            if (err) {
+                if (err.code == "ENOENT") {
+                    console.log("No data found to edit!");
+                    return;
+                } else {
+                    console.log(`Error while editing the file:- ${err}`);
+                    return;
+                }
+            }
+
+            let content = [];
+
+            try {
+                content = JSON.parse(data);
+            } catch (e) {
+                content = [];
+                console.log("No data found to edit!");
+                return;
+            }
+
+            if (content.length === 0) console.log("No data found to edit!");
+
+            let found = false;
+
+            for (let i = 0; i < content.length; i++) {
+                if (content[i].id == id) {
+                    found = true;
+                    content[i].task = taskContent;
+                    break;
+                }
+            }
+
+            if (!found) {
+                console.log(`No todo found with ID ${id}`);
+                return;
+            }
+
+            fs.writeFile(
+                "todo.txt",
+                JSON.stringify(content, null, 2),
+                "utf-8",
+                (err) => {
+                    if (err) {
+                        console.log(
+                            `Error while writing to file while editing data`,
+                        );
+                    } else {
+                        console.log(`Edited todo!`);
+                    }
+                },
+            );
+        });
+    });
+
 program.parse();
