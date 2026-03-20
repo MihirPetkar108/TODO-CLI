@@ -9,7 +9,7 @@ program
     .version("0.0.0");
 
 program
-    .command("write")
+    .command("add")
     .description("Add a todo!")
     .argument("<string>", "What do you want to add?")
     .action((content) => {
@@ -26,14 +26,6 @@ program
             }
 
             let todos = [];
-
-            if (data) {
-                try {
-                    todos = JSON.parse(data);
-                } catch (e) {
-                    todos = [];
-                }
-            }
 
             let newtodo = {
                 id: todos.length + 1,
@@ -54,6 +46,40 @@ program
                     else console.log("Task added successfully!");
                 },
             );
+        });
+    });
+
+program
+    .command("list")
+    .description("List all your todos!")
+    .action(() => {
+        fs.readFile("todo.txt", "utf-8", (err, data) => {
+            if (err) {
+                if (err.code == "ENOENT") {
+                    console.log("No todos found!");
+                    return;
+                } else {
+                    console.log(`Error while listing the data: ${err}`);
+                    return;
+                }
+            }
+
+            let content = [];
+
+            try {
+                content = JSON.parse(data);
+            } catch (e) {
+                content = [];
+            }
+
+            if (content.length === 0) {
+                console.log("No todos found!");
+                return;
+            }
+
+            for (let i = 0; i < content.length; i++) {
+                console.log(`Task ${i + 1}:- ${content[i].task}`);
+            }
         });
     });
 
