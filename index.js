@@ -13,7 +13,7 @@ program
     .description("Add a todo!")
     .argument("<string>", "What do you want to add?")
     .action((content) => {
-        fs.readFile("todo.txt", "utf-8", (err, data) => {
+        fs.readFile("todo.json", "utf-8", (err, data) => {
             if (err) {
                 if (err.code === "ENOENT") {
                     data = "";
@@ -45,7 +45,7 @@ program
             todos.push(newtodo);
 
             fs.writeFile(
-                "todo.txt",
+                "todo.json",
                 JSON.stringify(todos, null, 2),
                 "utf-8",
                 (err) => {
@@ -63,7 +63,7 @@ program
     .command("list")
     .description("List all your todos!")
     .action(() => {
-        fs.readFile("todo.txt", "utf-8", (err, data) => {
+        fs.readFile("todo.json", "utf-8", (err, data) => {
             if (err) {
                 if (err.code == "ENOENT") {
                     console.log("No todos found!");
@@ -100,7 +100,7 @@ program
     .description("Delete a todo!")
     .argument("<number>", "Which task do you want to delete?")
     .action((id) => {
-        fs.readFile("todo.txt", "utf-8", (err, data) => {
+        fs.readFile("todo.json", "utf-8", (err, data) => {
             if (err) {
                 if (err.code == "ENOENT") {
                     console.log("No data found!");
@@ -133,7 +133,7 @@ program
             }
 
             fs.writeFile(
-                "todo.txt",
+                "todo.json",
                 JSON.stringify(content, null, 2),
                 "utf-8",
                 (err) => {
@@ -155,7 +155,7 @@ program
     .argument("<number>", "Which task do you want to edit?")
     .argument("<string>", "What do you want to change the task to?")
     .action((id, taskContent) => {
-        fs.readFile("todo.txt", "utf-8", (err, data) => {
+        fs.readFile("todo.json", "utf-8", (err, data) => {
             if (err) {
                 if (err.code == "ENOENT") {
                     console.log("No data found to edit!");
@@ -194,7 +194,7 @@ program
             }
 
             fs.writeFile(
-                "todo.txt",
+                "todo.json",
                 JSON.stringify(content, null, 2),
                 "utf-8",
                 (err) => {
